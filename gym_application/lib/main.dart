@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'screens/membership_screen.dart';
 import 'screens/class_scheduling_screen.dart';
+import 'screens/dashboard_screen.dart'; // Import your dashboard screen
 
 void main() {
   runApp(const GymApp());
@@ -17,7 +18,7 @@ class GymApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const GymHomeScreen(),
+      home: const DashboardScreen(), // Set DashboardScreen as the entry screen
     );
   }
 }
