@@ -17,7 +17,7 @@ class ClassSchedule {
 }
 
 class ClassSchedulingScreen extends StatefulWidget {
-  const ClassSchedulingScreen({Key? key}) : super(key: key);
+  const ClassSchedulingScreen({super.key});
 
   @override
   State<ClassSchedulingScreen> createState() => _ClassSchedulingScreenState();
