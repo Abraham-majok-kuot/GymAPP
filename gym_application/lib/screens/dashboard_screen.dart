@@ -50,7 +50,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
             const SizedBox(width: 12),
             const Text(
-              'Gym Dashboard',
+              ' IUEA Gym App',
               style: TextStyle(fontWeight: FontWeight.w600),
             ),
           ],
@@ -74,7 +74,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
               backgroundColor: Colors.white,
               child: Text(
                 'J',
-                style: TextStyle(color: Colors.deepPurple, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  color: Colors.deepPurple,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),
@@ -91,10 +94,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             icon: Icon(Icons.card_membership),
             label: 'Membership',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.schedule),
-            label: 'Classes',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.schedule), label: 'Classes'),
           BottomNavigationBarItem(
             icon: Icon(Icons.check_circle),
             label: 'Attendance',
@@ -165,13 +165,17 @@ class DashboardContent extends StatelessWidget {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (_) => const ClassSchedulingScreen()),
+                        MaterialPageRoute(
+                          builder: (_) => const ClassSchedulingScreen(),
+                        ),
                       );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
                       foregroundColor: Colors.deepPurple,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
                     ),
                     child: const Text('Book Now'),
                   ),
@@ -186,8 +190,12 @@ class DashboardContent extends StatelessWidget {
             child: Semantics(
               label: 'Welcome message for user',
               child: const Text(
-                'Welcome Back, John!',
-                style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, letterSpacing: .2),
+                'Welcome Back, Abraham',
+                style: TextStyle(
+                  fontSize: 26,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: .2,
+                ),
               ),
             ),
           ),
@@ -208,13 +216,31 @@ class DashboardContent extends StatelessWidget {
               runSpacing: 12,
               children: [
                 _buildActionChip(context, 'Book Class', Icons.schedule, () {
-                  Navigator.push(context, MaterialPageRoute(builder: (_) => const ClassSchedulingScreen()));
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const ClassSchedulingScreen(),
+                    ),
+                  );
                 }),
-                _buildActionChip(context, 'Renew Membership', Icons.card_membership, () {
-                  Navigator.push(context, MaterialPageRoute(builder: (_) => const MembershipScreen()));
-                }),
+                _buildActionChip(
+                  context,
+                  'Renew Membership',
+                  Icons.card_membership,
+                  () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const MembershipScreen(),
+                      ),
+                    );
+                  },
+                ),
                 _buildActionChip(context, 'Check In', Icons.check_circle, () {
-                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AttendanceScreen()));
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const AttendanceScreen()),
+                  );
                 }),
               ],
             ),
@@ -228,7 +254,10 @@ class DashboardContent extends StatelessWidget {
             title: 'Membership Status',
             subtitle: 'Active until Dec 31, 2025',
             semanticsLabel: 'Membership status, active until December 31, 2025',
-            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const MembershipScreen())),
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const MembershipScreen()),
+            ),
           ),
 
           // Upcoming Classes Card
@@ -238,7 +267,10 @@ class DashboardContent extends StatelessWidget {
             title: 'Upcoming Classes',
             subtitle: 'Yoga - Tomorrow, 8 AM',
             semanticsLabel: 'Upcoming yoga class tomorrow at 8 AM',
-            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ClassSchedulingScreen())),
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const ClassSchedulingScreen()),
+            ),
           ),
 
           // Attendance Card
@@ -248,7 +280,10 @@ class DashboardContent extends StatelessWidget {
             title: 'Attendance',
             subtitle: 'Last visit: Jun 22, 2025',
             semanticsLabel: 'Last gym visit on June 22, 2025',
-            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AttendanceScreen())),
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const AttendanceScreen()),
+            ),
           ),
 
           // Trainer Spotlight
@@ -257,7 +292,13 @@ class DashboardContent extends StatelessWidget {
             iconWidget: const CircleAvatar(
               radius: 24,
               backgroundColor: Colors.deepPurple,
-              child: Text('S', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+              child: Text(
+                'S',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
             title: 'Meet Sarah',
             subtitle: 'Yoga & Strength Trainer',
@@ -317,27 +358,44 @@ class DashboardContent extends StatelessWidget {
         label: semanticsLabel,
         child: Card(
           elevation: 4,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
           child: ListTile(
-            leading: iconWidget ?? Icon(icon, color: Colors.deepPurple, size: 30),
-            title: Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
+            leading:
+                iconWidget ?? Icon(icon, color: Colors.deepPurple, size: 30),
+            title: Text(
+              title,
+              style: const TextStyle(fontWeight: FontWeight.w600),
+            ),
             subtitle: Text(subtitle),
             trailing: const Icon(Icons.arrow_forward, color: Colors.deepPurple),
             onTap: onTap,
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 8,
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildActionChip(BuildContext context, String label, IconData icon, VoidCallback onPressed) {
+  Widget _buildActionChip(
+    BuildContext context,
+    String label,
+    IconData icon,
+    VoidCallback onPressed,
+  ) {
     return ActionChip(
       avatar: Icon(icon, color: Colors.deepPurple),
       label: Text(label),
       onPressed: onPressed,
       backgroundColor: Colors.deepPurple[50],
-      labelStyle: const TextStyle(color: Colors.deepPurple, fontWeight: FontWeight.w600),
+      labelStyle: const TextStyle(
+        color: Colors.deepPurple,
+        fontWeight: FontWeight.w600,
+      ),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
     );
