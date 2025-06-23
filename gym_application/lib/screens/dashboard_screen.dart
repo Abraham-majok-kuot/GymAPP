@@ -50,7 +50,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
             const SizedBox(width: 12),
             const Text(
-              ' IUEA Gym App',
+              'IUEA Gym App',
               style: TextStyle(fontWeight: FontWeight.w600),
             ),
           ],
@@ -119,6 +119,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
 class DashboardContent extends StatelessWidget {
   const DashboardContent({super.key});
 
+  // Determine greeting based on local time
+  String _getGreeting() {
+    final hour = DateTime.now().hour;
+    if (hour < 12) {
+      return 'Good Morning, Abraham';
+    } else if (hour < 17) {
+      return 'Good Afternoon, Abraham';
+    } else {
+      return 'Good Evening, Abraham';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -184,17 +196,17 @@ class DashboardContent extends StatelessWidget {
             ),
           ),
 
-          // Welcome Section
+          // Welcome Section with Dynamic Greeting
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
             child: Semantics(
               label: 'Welcome message for user',
-              child: const Text(
-                'Welcome Back, Abraham',
-                style: TextStyle(
+              child: Text(
+                _getGreeting(),
+                style: const TextStyle(
                   fontSize: 26,
                   fontWeight: FontWeight.bold,
-                  letterSpacing: .2,
+                  letterSpacing: 0.2,
                 ),
               ),
             ),
@@ -362,8 +374,7 @@ class DashboardContent extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
           ),
           child: ListTile(
-            leading:
-                iconWidget ?? Icon(icon, color: Colors.deepPurple, size: 30),
+            leading: iconWidget ?? Icon(icon, color: Colors.deepPurple, size: 30),
             title: Text(
               title,
               style: const TextStyle(fontWeight: FontWeight.w600),
