@@ -7,8 +7,9 @@ class SettingsScreen extends StatefulWidget {
 
   const SettingsScreen({
     super.key,
-    
+
     required this.darkModeEnabled,
+    
     required this.onDarkModeChanged,
   });
 
