@@ -91,7 +91,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               child: Text(
                 'J',
                 style: TextStyle(
-                  color: Colors.deepPurple,
+                  color: Color(0xFF800000), // Maroon color
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -121,7 +121,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.deepPurple,
+        selectedItemColor: const Color(0xFF800000), // Maroon color
         unselectedItemColor: Colors.grey,
         onTap: _onItemTapped,
         type: BottomNavigationBarType.fixed,
@@ -159,7 +159,7 @@ class DashboardContent extends StatelessWidget {
             margin: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               gradient: const LinearGradient(
-                colors: [Colors.deepPurple, Colors.purpleAccent],
+                colors: [Color(0xFF800000), Colors.redAccent],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
@@ -200,7 +200,7 @@ class DashboardContent extends StatelessWidget {
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
-                      foregroundColor: Colors.deepPurple,
+                      foregroundColor: const Color(0xFF800000), // Maroon color
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
@@ -319,7 +319,7 @@ class DashboardContent extends StatelessWidget {
             context,
             iconWidget: const CircleAvatar(
               radius: 24,
-              backgroundColor: Colors.deepPurple,
+              backgroundColor: Color(0xFF800000), // Maroon color
               child: Text(
                 'S',
                 style: TextStyle(
@@ -390,13 +390,13 @@ class DashboardContent extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
           ),
           child: ListTile(
-            leading: iconWidget ?? Icon(icon, color: Colors.deepPurple, size: 30),
+            leading: iconWidget ?? Icon(icon, color: const Color(0xFF800000), size: 30),
             title: Text(
               title,
               style: const TextStyle(fontWeight: FontWeight.w600),
             ),
             subtitle: Text(subtitle),
-            trailing: const Icon(Icons.arrow_forward, color: Colors.deepPurple),
+            trailing: const Icon(Icons.arrow_forward, color: Color(0xFF800000)),
             onTap: onTap,
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 16,
@@ -415,12 +415,12 @@ class DashboardContent extends StatelessWidget {
     VoidCallback onPressed,
   ) {
     return ActionChip(
-      avatar: Icon(icon, color: Colors.deepPurple),
+      avatar: Icon(icon, color: const Color(0xFF800000)), // Maroon color
       label: Text(label),
       onPressed: onPressed,
-      backgroundColor: Colors.deepPurple[50],
+      backgroundColor: Colors.red[50],
       labelStyle: const TextStyle(
-        color: Colors.deepPurple,
+        color: Color(0xFF800000), // Maroon color
         fontWeight: FontWeight.w600,
       ),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
