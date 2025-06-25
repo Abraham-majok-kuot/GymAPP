@@ -4,21 +4,33 @@ import 'screens/class_scheduling_screen.dart';
 import 'screens/dashboard_screen.dart'; // Import your dashboard screen
 
 void main() {
-  runApp(const GymApp());
+  runApp(GymApp()); // Remove const here
 }
 
-class GymApp extends StatelessWidget {
-  const GymApp({super.key});
+class GymApp extends StatefulWidget {
+  @override
+  State<GymApp> createState() => _GymAppState();
+}
+
+class _GymAppState extends State<GymApp> {
+  bool _darkMode = true; // Default is dark mode
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Gym Management',
       debugShowCheckedModeBanner: false, // Removes the debug banner
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: const DashboardScreen(), // Set DashboardScreen as the entry screen
+      theme: ThemeData.light(),
+      darkTheme: ThemeData.dark(),
+      themeMode: _darkMode ? ThemeMode.dark : ThemeMode.light,
+      home: DashboardScreen(
+        darkModeEnabled: _darkMode,
+        onDarkModeChanged: (val) {
+          setState(() {
+            _darkMode = val;
+          });
+        },
+      ), // Set DashboardScreen as the entry screen
     );
   }
 }
@@ -40,7 +52,7 @@ class GymHomeScreen extends StatelessWidget {
       ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,        
           children: [
             ElevatedButton(
               child: const Text('Membership Plans'),

@@ -5,7 +5,14 @@ import 'settings_screen.dart';
 import 'attendance_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
-  const DashboardScreen({super.key});
+  final bool darkModeEnabled;
+  final ValueChanged<bool> onDarkModeChanged;
+
+  const DashboardScreen({
+    super.key,
+    required this.darkModeEnabled,
+    required this.onDarkModeChanged,
+  });
 
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();
@@ -14,13 +21,22 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   int _selectedIndex = 0;
 
-  static const List<Widget> _screens = [
-    DashboardContent(),
-    MembershipScreen(),
-    ClassSchedulingScreen(),
-    AttendanceScreen(),
-    SettingsScreen(),
-  ];
+  late final List<Widget> _screens;
+
+  @override
+  void initState() {
+    super.initState();
+    _screens = [
+      const DashboardContent(),
+      const MembershipScreen(),
+      const ClassSchedulingScreen(),
+      const AttendanceScreen(),
+      SettingsScreen(
+        darkModeEnabled: widget.darkModeEnabled,
+        onDarkModeChanged: widget.onDarkModeChanged,
+      ),
+    ];
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -55,7 +71,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
           ],
         ),
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: const Color(0xFF800000), // Maroon color
         foregroundColor: Colors.white,
         actions: [
           IconButton(
@@ -409,6 +425,6 @@ class DashboardContent extends StatelessWidget {
       ),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-    );
+    ); 
   }
 }

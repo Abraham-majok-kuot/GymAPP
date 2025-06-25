@@ -17,16 +17,28 @@ class _MembershipScreenState extends State<MembershipScreen> {
       type: 'Basic',
       price: '\$30/month',
       features: ['Gym Access', 'Locker Room'],
+      durationDays: 30,
+      startDate: DateTime.now(),
+      endDate: DateTime.now().add(Duration(days: 30)),
+      status: MembershipStatus.active,
     ),
     Membership(
       type: 'Premium',
       price: '\$50/month',
       features: ['All Basic Features', 'Group Classes', 'Sauna Access'],
+      durationDays: 30,
+      startDate: DateTime.now(),
+      endDate: DateTime.now().add(Duration(days: 30)),
+      status: MembershipStatus.active,
     ),
     Membership(
       type: 'VIP',
       price: '\$80/month',
       features: ['All Premium Features', 'Personal Trainer', 'Nutrition Plan'],
+      durationDays: 30,
+      startDate: DateTime.now(),
+      endDate: DateTime.now().add(Duration(days: 30)),
+      status: MembershipStatus.active,
     ),
   ];
 

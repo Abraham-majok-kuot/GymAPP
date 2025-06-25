@@ -64,10 +64,38 @@ class _ClassSchedulingScreenState extends State<ClassSchedulingScreen> {
     });
   }
 
+  Future<void> _confirmAndBookSlot(int index) async {
+    final classSchedule = classes[index];
+    final shouldBook = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Book Class'),
+        content: Text(
+            'Do you want to book a slot for ${classSchedule.className} with ${classSchedule.instructor} on ${_formatDateTime(classSchedule.dateTime)}?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('Confirm'),
+          ),
+        ],
+      ),
+    );
+    if (shouldBook == true) {
+      bookSlot(index);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Class Scheduling')),
+      appBar: AppBar(
+        title: const Text('Class Scheduling'),
+        backgroundColor: Colors.red,
+      ),
       body: ListView.builder(
         padding: const EdgeInsets.all(16),
         itemCount: classes.length,
@@ -91,8 +119,11 @@ class _ClassSchedulingScreenState extends State<ClassSchedulingScreen> {
                 ],
               ),
               trailing: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF800000), // Maroon color
+                ),
                 onPressed: classSchedule.bookedSlots < classSchedule.slots
-                    ? () => bookSlot(index)
+                    ? () => _confirmAndBookSlot(index)
                     : null,
                 child: const Text('Book'),
               ),
