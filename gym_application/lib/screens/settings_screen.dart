@@ -17,6 +17,13 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   bool _notificationsEnabled = true;
+  late bool _darkModeEnabled;
+
+  @override
+  void initState() {
+    super.initState();
+    _darkModeEnabled = widget.darkModeEnabled;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,8 +53,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           SwitchListTile(
             title: const Text('Dark Mode'),
-            value: widget.darkModeEnabled,
+            value: _darkModeEnabled,
             onChanged: (val) {
+              setState(() {
+                _darkModeEnabled = val;
+              });
               widget.onDarkModeChanged(val);
             },
             secondary: const Icon(Icons.dark_mode),
@@ -74,9 +84,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
             title: const Text('Logout'),
             onTap: () {
               // Add logout logic here
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Logged out')),
-              );
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(const SnackBar(content: Text('Logged out')));
             },
           ),
         ],

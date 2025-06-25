@@ -8,6 +8,8 @@ void main() {
 }
 
 class GymApp extends StatefulWidget {
+  const GymApp({super.key});
+
   @override
   State<GymApp> createState() => _GymAppState();
 }
@@ -52,7 +54,7 @@ class GymHomeScreen extends StatelessWidget {
       ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,        
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ElevatedButton(
               child: const Text('Membership Plans'),
