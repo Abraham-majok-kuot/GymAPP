@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'screens/membership_screen.dart';
 import 'screens/class_scheduling_screen.dart';
 import 'screens/dashboard_screen.dart'; // Import your dashboard screen
+import 'screens/login_screen.dart'; // Import login screen
+import 'screens/registration_screen.dart'; // Import registration screen
 
 void main() {
   runApp(GymApp()); // Remove const here
@@ -25,14 +27,19 @@ class _GymAppState extends State<GymApp> {
       theme: ThemeData.light(),
       darkTheme: ThemeData.dark(),
       themeMode: _darkMode ? ThemeMode.dark : ThemeMode.light,
-      home: DashboardScreen(
-        darkModeEnabled: _darkMode,
-        onDarkModeChanged: (val) {
-          setState(() {
-            _darkMode = val;
-          });
-        },
-      ), // Set DashboardScreen as the entry screen
+      initialRoute: '/login', // Set initial route to login
+      routes: {
+        '/login': (context) => const LoginScreen(),
+        '/registration': (context) => const RegistrationScreen(),
+        '/dashboard': (context) => DashboardScreen(
+          darkModeEnabled: _darkMode,
+          onDarkModeChanged: (val) {
+            setState(() {
+              _darkMode = val;
+            });
+          },
+        ),
+      },
     );
   }
 }
