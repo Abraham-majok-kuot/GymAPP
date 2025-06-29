@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'screens/membership_screen.dart';
 import 'screens/class_scheduling_screen.dart';
-import 'screens/dashboard_screen.dart'; // Import your dashboard screen
-import 'screens/login_screen.dart'; // Import login screen
-import 'screens/registration_screen.dart'; // Import registration screen
+import 'screens/dashboard_screen.dart';
+import 'screens/login_screen.dart';
+import 'screens/registration_screen.dart';
+import 'splash_screen.dart';
 
 void main() {
-  runApp(GymApp()); // Remove const here
+  // Enable immersive full-screen mode
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+  runApp(const GymApp());
 }
 
 class GymApp extends StatefulWidget {
@@ -17,29 +21,38 @@ class GymApp extends StatefulWidget {
 }
 
 class _GymAppState extends State<GymApp> {
-  bool _darkMode = true; // Default is dark mode
+  bool _darkMode = true;
+
+  void _onDarkModeChanged(bool value) {
+    setState(() {
+      _darkMode = value;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Gym Management',
-      debugShowCheckedModeBanner: false, // Removes the debug banner
+      debugShowCheckedModeBanner: false,
       theme: ThemeData.light(),
       darkTheme: ThemeData.dark(),
       themeMode: _darkMode ? ThemeMode.dark : ThemeMode.light,
-      initialRoute: '/login', // Set initial route to login
+      initialRoute: '/splash',
       routes: {
+        '/splash': (context) => SplashScreen(),
         '/login': (context) => const LoginScreen(),
         '/registration': (context) => const RegistrationScreen(),
         '/dashboard': (context) => DashboardScreen(
           darkModeEnabled: _darkMode,
-          onDarkModeChanged: (val) {
-            setState(() {
-              _darkMode = val;
-            });
-          },
+          onDarkModeChanged: _onDarkModeChanged,
         ),
       },
+      onUnknownRoute: (settings) => MaterialPageRoute(
+        builder: (context) => DashboardScreen(
+          darkModeEnabled: _darkMode,
+          onDarkModeChanged: _onDarkModeChanged,
+        ),
+      ),
     );
   }
 }
@@ -53,7 +66,12 @@ class GymHomeScreen extends StatelessWidget {
       appBar: AppBar(
         title: Row(
           children: [
-            Image.asset('assets/images/gymlogo.jpg', height: 32),
+            Image.asset(
+              'assets/images/gymlogo.jpg',
+              height: 32,
+              errorBuilder: (context, error, stackTrace) =>
+                  const Icon(Icons.error),
+            ),
             const SizedBox(width: 10),
             const Text('Gym Management Home'),
           ],
@@ -64,7 +82,6 @@ class GymHomeScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ElevatedButton(
-              child: const Text('Membership Plans'),
               onPressed: () {
                 Navigator.push(
                   context,
@@ -73,10 +90,10 @@ class GymHomeScreen extends StatelessWidget {
                   ),
                 );
               },
+              child: const Text('Membership Plans'),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              child: const Text('Class Scheduling'),
               onPressed: () {
                 Navigator.push(
                   context,
@@ -85,6 +102,7 @@ class GymHomeScreen extends StatelessWidget {
                   ),
                 );
               },
+              child: const Text('Class Scheduling'),
             ),
           ],
         ),

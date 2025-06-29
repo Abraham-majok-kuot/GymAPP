@@ -390,7 +390,9 @@ class DashboardContent extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
           ),
           child: ListTile(
-            leading: iconWidget ?? Icon(icon, color: const Color(0xFF800000), size: 30),
+            leading:
+                iconWidget ??
+                Icon(icon, color: const Color(0xFF800000), size: 30),
             title: Text(
               title,
               style: const TextStyle(fontWeight: FontWeight.w600),
@@ -425,6 +427,6 @@ class DashboardContent extends StatelessWidget {
       ),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-    ); 
+    );
   }
 }
