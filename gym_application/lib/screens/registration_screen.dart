@@ -52,6 +52,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     border: OutlineInputBorder(),
                     labelStyle: const TextStyle(color: Color(0xFF800000)),
                   ),
+                  style: const TextStyle(color: Colors.black), // Set input text color to black
                 ),
                 const SizedBox(height: 16),
                 TextField(
@@ -61,6 +62,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     labelStyle: const TextStyle(color: Color(0xFF800000)),
                   ),
                   keyboardType: TextInputType.emailAddress,
+                  style: const TextStyle(color: Colors.black), // Set input text color to black
                 ),
                 const SizedBox(height: 16),
                 TextField(
@@ -70,6 +72,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     labelStyle: const TextStyle(color: Color(0xFF800000)),
                   ),
                   obscureText: true,
+                  style: const TextStyle(color: Colors.black), // Set input text color to black
                 ),
                 const SizedBox(height: 24),
                 ElevatedButton(
