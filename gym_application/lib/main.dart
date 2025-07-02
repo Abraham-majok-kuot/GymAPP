@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:firebase_core/firebase_core.dart'; // Add Firebase core
 import 'screens/membership_screen.dart';
 import 'screens/class_scheduling_screen.dart';
 import 'screens/dashboard_screen.dart';
@@ -7,9 +8,16 @@ import 'screens/login_screen.dart';
 import 'screens/registration_screen.dart';
 import 'splash_screen.dart';
 
-void main() {
+void main() async {
+  // Ensure Widgets binding is initialized
+  WidgetsFlutterBinding.ensureInitialized();
+
   // Enable immersive full-screen mode
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+
+  // Initialize Firebase
+  await Firebase.initializeApp();
+
   runApp(const GymApp());
 }
 
@@ -46,6 +54,7 @@ class _GymAppState extends State<GymApp> {
           darkModeEnabled: _darkMode,
           onDarkModeChanged: _onDarkModeChanged,
         ),
+        '/home': (context) => const GymHomeScreen(), // Added for navigation
       },
       onUnknownRoute: (settings) => MaterialPageRoute(
         builder: (context) => DashboardScreen(
