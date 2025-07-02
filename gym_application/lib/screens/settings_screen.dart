@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'login_screen.dart';
+
 // Add a callback for theme mode change
 class SettingsScreen extends StatefulWidget {
   final bool darkModeEnabled;
@@ -30,7 +31,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Settings'),
-        backgroundColor: Colors.lightBlue,
+        backgroundColor: const Color.fromARGB(255, 114, 4, 6),
       ),
       body: ListView(
         children: [
@@ -89,9 +90,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 MaterialPageRoute(builder: (context) => const LoginScreen()),
               );
               // Optional: Show a snackbar to confirm logout
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Logged out')),
-              );
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(const SnackBar(content: Text('Logged out')));
             },
           ),
         ],

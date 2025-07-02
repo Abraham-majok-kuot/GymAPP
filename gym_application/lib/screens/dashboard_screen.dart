@@ -22,6 +22,7 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   int _selectedIndex = 0;
+  String _initialLetter = 'J'; // Default initial letter
 
   late final List<Widget> _screens;
 
@@ -38,6 +39,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
         onDarkModeChanged: widget.onDarkModeChanged,
       ),
     ];
+    _fetchUserInitial(); // Fetch initial letter on init
+  }
+
+  Future<void> _fetchUserInitial() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final doc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+      final name = doc.data()?['name'] ?? 'User';
+      setState(() {
+        _initialLetter = name.isNotEmpty ? name[0].toUpperCase() : 'U';
+      });
+    }
   }
 
   void _onItemTapped(int index) {
@@ -90,14 +106,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
             },
             tooltip: 'Notifications',
           ),
-          const Padding(
-            padding: EdgeInsets.only(right: 16),
+          Padding(
+            padding: const EdgeInsets.only(right: 16),
             child: CircleAvatar(
               radius: 18,
               backgroundColor: Colors.white,
               child: Text(
-                'J',
-                style: TextStyle(
+                _initialLetter, // Dynamically updated initial letter
+                style: const TextStyle(
                   color: Color(0xFF800000),
                   fontWeight: FontWeight.bold,
                 ),
