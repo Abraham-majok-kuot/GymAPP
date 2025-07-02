@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'membership_screen.dart';
 import 'class_scheduling_screen.dart';
 import 'settings_screen.dart';
@@ -140,14 +142,26 @@ class _DashboardScreenState extends State<DashboardScreen> {
 class DashboardContent extends StatelessWidget {
   const DashboardContent({super.key});
 
-  String _getGreeting() {
+  Future<String> _getUserName() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final doc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+      return doc.data()?['name'] ?? 'User';
+    }
+    return 'User';
+  }
+
+  String _getGreeting(String name) {
     final hour = DateTime.now().hour;
     if (hour < 12) {
-      return 'Good Morning, Abraham';
+      return 'Good Morning, $name';
     } else if (hour < 17) {
-      return 'Good Afternoon, Abraham';
+      return 'Good Afternoon, $name';
     } else {
-      return 'Good Evening, Abraham';
+      return 'Good Evening, $name';
     }
   }
 
@@ -162,235 +176,258 @@ class DashboardContent extends StatelessWidget {
               AppBar().preferredSize.height -
               kBottomNavigationBarHeight, // Adjust for AppBar and BottomNav
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Hero Banner
-            Container(
-              height:
-                  MediaQuery.of(context).size.height *
-                  0.25, // Responsive height
-              margin: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [Color(0xFF800000), Colors.redAccent],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Colors.black26,
-                    blurRadius: 8,
-                    offset: Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Semantics(
-                      label: 'Join our new yoga class promotion',
-                      child: const Text(
-                        'Join Our New Yoga Class!',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
+        child: FutureBuilder<String>(
+          future: _getUserName(),
+          builder: (context, snapshot) {
+            final name = snapshot.data ?? 'User';
+            final greeting = _getGreeting(name);
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Hero Banner
+                Container(
+                  height:
+                      MediaQuery.of(context).size.height *
+                      0.25, // Responsive height
+                  margin: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFF800000), Colors.redAccent],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
                     ),
-                    const SizedBox(height: 6),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const ClassSchedulingScreen(),
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.black26,
+                        blurRadius: 8,
+                        offset: Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Semantics(
+                          label: 'Join our new yoga class promotion',
+                          child: const Text(
+                            'Join Our New Yoga Class!',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.center,
                           ),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        foregroundColor: const Color(0xFF800000),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
                         ),
-                      ),
-                      child: const Text('Book Now'),
+                        const SizedBox(height: 6),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => const ClassSchedulingScreen(),
+                              ),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            foregroundColor: const Color(0xFF800000),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                          ),
+                          child: const Text('Book Now'),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ),
-            ),
-
-            // Welcome Section with Dynamic Greeting
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-              child: Semantics(
-                label: 'Welcome message for user',
-                child: Text(
-                  _getGreeting(),
-                  style: const TextStyle(
-                    fontSize: 26,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 0.2,
                   ),
                 ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Text(
-                'Your gym overview.',
-                style: Theme.of(context).textTheme.bodySmall,
-              ),
-            ),
-            const SizedBox(height: 20),
 
-            // Quick Actions
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Wrap(
-                spacing: 12,
-                runSpacing: 12,
-                children: [
-                  _buildActionChip(context, 'Book Class', Icons.schedule, () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => const ClassSchedulingScreen(),
+                // Welcome Section with Dynamic Greeting
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 8,
+                  ),
+                  child: Semantics(
+                    label: 'Welcome message for user',
+                    child: Text(
+                      greeting,
+                      style: const TextStyle(
+                        fontSize: 26,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 0.2,
                       ),
-                    );
-                  }),
-                  _buildActionChip(
-                    context,
-                    'Renew Membership',
-                    Icons.card_membership,
-                    () {
-                      Navigator.push(
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Text(
+                    'Your gym overview.',
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ),
+                const SizedBox(height: 20),
+
+                // Quick Actions
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Wrap(
+                    spacing: 12,
+                    runSpacing: 12,
+                    children: [
+                      _buildActionChip(
                         context,
-                        MaterialPageRoute(
-                          builder: (_) => const MembershipScreen(),
-                        ),
-                      );
-                    },
-                  ),
-                  _buildActionChip(context, 'Check In', Icons.check_circle, () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => const AttendanceScreen(),
+                        'Book Class',
+                        Icons.schedule,
+                        () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const ClassSchedulingScreen(),
+                            ),
+                          );
+                        },
                       ),
-                    );
-                  }),
-                ],
-              ),
-            ),
-            const SizedBox(height: 20),
-
-            // Membership Status Card
-            _buildCard(
-              context,
-              icon: Icons.card_membership,
-              title: 'Membership Status',
-              subtitle: 'Active until Dec 31, 2025',
-              semanticsLabel:
-                  'Membership status, active until December 31, 2025',
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const MembershipScreen()),
-              ),
-            ),
-
-            // Upcoming Classes Card
-            _buildCard(
-              context,
-              icon: Icons.schedule,
-              title: 'Upcoming Classes',
-              subtitle: 'Yoga - Tomorrow, 8 AM',
-              semanticsLabel: 'Upcoming yoga class tomorrow at 8 AM',
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => const ClassSchedulingScreen(),
-                ),
-              ),
-            ),
-
-            // Attendance Card
-            _buildCard(
-              context,
-              icon: Icons.check_circle,
-              title: 'Attendance',
-              subtitle: 'Last visit: Jun 22, 2025',
-              semanticsLabel: 'Last gym visit on June 22, 2025',
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const AttendanceScreen()),
-              ),
-            ),
-
-            // Trainer Spotlight
-            _buildCard(
-              context,
-              iconWidget: const CircleAvatar(
-                radius: 24,
-                backgroundColor: Color(0xFF800000),
-                child: Text(
-                  'S',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
+                      _buildActionChip(
+                        context,
+                        'Renew Membership',
+                        Icons.card_membership,
+                        () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const MembershipScreen(),
+                            ),
+                          );
+                        },
+                      ),
+                      _buildActionChip(
+                        context,
+                        'Check In',
+                        Icons.check_circle,
+                        () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const AttendanceScreen(),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
                   ),
                 ),
-              ),
-              title: 'Meet Sarah',
-              subtitle: 'Yoga & Strength Trainer',
-              semanticsLabel: 'Featured trainer Sarah, specializes in yoga',
-              onTap: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Trainer Profile Coming Soon')),
-                );
-              },
-            ),
+                const SizedBox(height: 20),
 
-            // Gym Info Footer
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: Semantics(
-                label: 'Gym information',
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Gym Info',
+                // Membership Status Card
+                _buildCard(
+                  context,
+                  icon: Icons.card_membership,
+                  title: 'Membership Status',
+                  subtitle: 'Active until Dec 31, 2025',
+                  semanticsLabel:
+                      'Membership status, active until December 31, 2025',
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const MembershipScreen()),
+                  ),
+                ),
+
+                // Upcoming Classes Card
+                _buildCard(
+                  context,
+                  icon: Icons.schedule,
+                  title: 'Upcoming Classes',
+                  subtitle: 'Yoga - Tomorrow, 8 AM',
+                  semanticsLabel: 'Upcoming yoga class tomorrow at 8 AM',
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const ClassSchedulingScreen(),
+                    ),
+                  ),
+                ),
+
+                // Attendance Card
+                _buildCard(
+                  context,
+                  icon: Icons.check_circle,
+                  title: 'Attendance',
+                  subtitle: 'Last visit: Jun 22, 2025',
+                  semanticsLabel: 'Last gym visit on June 22, 2025',
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const AttendanceScreen()),
+                  ),
+                ),
+
+                // Trainer Spotlight
+                _buildCard(
+                  context,
+                  iconWidget: const CircleAvatar(
+                    radius: 24,
+                    backgroundColor: Color(0xFF800000),
+                    child: Text(
+                      'S',
                       style: TextStyle(
-                        fontSize: 18,
+                        color: Colors.white,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    const Text('Hours: Mon-Fri 6 AM - 10 PM'),
-                    const Text('Location: 123 Fitness St, City'),
-                    TextButton(
-                      onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Contact Us Coming Soon'),
-                          ),
-                        );
-                      },
-                      child: const Text('Contact: +123-456-7890'),
-                    ),
-                  ],
+                  ),
+                  title: 'Meet Sarah',
+                  subtitle: 'Yoga & Strength Trainer',
+                  semanticsLabel: 'Featured trainer Sarah, specializes in yoga',
+                  onTap: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Trainer Profile Coming Soon'),
+                      ),
+                    );
+                  },
                 ),
-              ),
-            ),
-            const SizedBox(height: 20),
-          ],
+
+                // Gym Info Footer
+                Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Semantics(
+                    label: 'Gym information',
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Gym Info',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        const Text('Hours: Mon-Fri 6 AM - 10 PM'),
+                        const Text('Location: 123 Fitness St, City'),
+                        TextButton(
+                          onPressed: () {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Contact Us Coming Soon'),
+                              ),
+                            );
+                          },
+                          child: const Text('Contact: +123-456-7890'),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+              ],
+            );
+          },
         ),
       ),
     );
