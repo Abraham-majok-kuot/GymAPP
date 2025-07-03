@@ -73,7 +73,7 @@ class _MembershipScreenState extends State<MembershipScreen> {
               'Features:',
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
-            ...membership.features.map((f) => Text('- $f')).toList(),
+            ...membership.features.map((f) => Text('- $f')),
             const SizedBox(height: 16),
             Text(
               'Status: ${membership.status.name[0].toUpperCase()}${membership.status.name.substring(1)}',
@@ -103,16 +103,7 @@ class _MembershipScreenState extends State<MembershipScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Membership Plans'),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 16.0),
-            child: Image.asset(
-              'assets/images/gymlogo.jpg',
-              height: 36,
-              width: 36,
-            ),
-          ),
-        ],
+        actions: [Padding(padding: const EdgeInsets.only(right: 16.0))],
       ),
       body: Column(
         children: [
