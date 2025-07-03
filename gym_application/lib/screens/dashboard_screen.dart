@@ -70,19 +70,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         shadowColor: Colors.black26,
         title: Row(
           children: [
-            Hero(
-              tag: 'gym_logo',
-              child: Image.asset(
-                'assets/images/gymlogo.jpg',
-                height: 36,
-                width: 36, // Constrain width
-                errorBuilder: (context, error, stackTrace) => const Icon(
-                  Icons.fitness_center,
-                  size: 36,
-                  color: Colors.white,
-                ),
-              ),
-            ),
             const SizedBox(width: 12),
             Expanded(
               // Prevent overflow by allowing text to shrink
