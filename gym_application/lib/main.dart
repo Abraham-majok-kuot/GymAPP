@@ -1,23 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:firebase_core/firebase_core.dart'; // Add Firebase core
+import 'package:firebase_core/firebase_core.dart';
 import 'screens/membership_screen.dart';
 import 'screens/class_scheduling_screen.dart';
 import 'screens/dashboard_screen.dart';
 import 'screens/login_screen.dart';
 import 'screens/registration_screen.dart';
+import 'screens/profile_settings.dart';
 import 'splash_screen.dart';
 
 void main() async {
-  // Ensure Widgets binding is initialized
   WidgetsFlutterBinding.ensureInitialized();
-
-  // Enable immersive full-screen mode
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
-
-  // Initialize Firebase
-  await Firebase.initializeApp();
-
+  await Firebase.initializeApp(); // Removed App Check initialization
   runApp(const GymApp());
 }
 
@@ -54,7 +49,8 @@ class _GymAppState extends State<GymApp> {
           darkModeEnabled: _darkMode,
           onDarkModeChanged: _onDarkModeChanged,
         ),
-        '/home': (context) => const GymHomeScreen(), // Added for navigation
+        '/home': (context) => const GymHomeScreen(),
+        '/profile': (context) => const ProfileSettings(),
       },
       onUnknownRoute: (settings) => MaterialPageRoute(
         builder: (context) => DashboardScreen(
@@ -85,6 +81,7 @@ class GymHomeScreen extends StatelessWidget {
             const Text('Gym Management Home'),
           ],
         ),
+        backgroundColor: const Color(0xFF800000),
       ),
       body: Center(
         child: Column(
@@ -112,6 +109,18 @@ class GymHomeScreen extends StatelessWidget {
                 );
               },
               child: const Text('Class Scheduling'),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ProfileSettings(),
+                  ),
+                );
+              },
+              child: const Text('Profile Settings'),
             ),
           ],
         ),

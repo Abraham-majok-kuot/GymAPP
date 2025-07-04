@@ -5,7 +5,7 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: '^3.8.0'  # Added SDK constraint as recommended
+  sdk: '^3.8.0'
 
 dependencies:
   flutter:
@@ -14,6 +14,7 @@ dependencies:
   firebase_core: ^3.15.0
   firebase_auth: ^5.6.1
   cloud_firestore: ^5.6.10
+  image_picker: ^1.1.2  # Added for profile picture selection
 
 dev_dependencies:
   flutter_test:

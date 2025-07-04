@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -5,6 +6,7 @@ import 'membership_screen.dart';
 import 'class_scheduling_screen.dart';
 import 'settings_screen.dart';
 import 'attendance_screen.dart';
+import 'profile_settings.dart';
 
 class DashboardScreen extends StatefulWidget {
   final bool darkModeEnabled;
@@ -22,7 +24,9 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   int _selectedIndex = 0;
-  String _initialLetter = 'J'; // Default initial letter
+  String _initialLetter = 'U';
+  String _userName = 'User';
+  String? _profilePictureBase64;
 
   late final List<Widget> _screens;
 
@@ -39,21 +43,84 @@ class _DashboardScreenState extends State<DashboardScreen> {
         onDarkModeChanged: widget.onDarkModeChanged,
       ),
     ];
-    _fetchUserInitial(); // Fetch initial letter on init
+    _fetchUserData();
   }
 
-  Future<void> _fetchUserInitial() async {
+  Future<void> _fetchUserData() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       final doc = await FirebaseFirestore.instance
           .collection('users')
           .doc(user.uid)
           .get();
-      final name = doc.data()?['name'] ?? 'User';
+      final data = doc.data();
       setState(() {
-        _initialLetter = name.isNotEmpty ? name[0].toUpperCase() : 'U';
+        _userName = data?['name'] ?? 'User';
+        _initialLetter = _userName.isNotEmpty
+            ? _userName[0].toUpperCase()
+            : 'U';
+        _profilePictureBase64 = data?['profilePicture'] as String?;
       });
     }
+  }
+
+  void _showProfilePicturePreview(BuildContext context) {
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: 'Dismiss',
+      barrierColor: Colors.black54, // Semi-transparent background
+      transitionDuration: const Duration(milliseconds: 200),
+      pageBuilder: (context, animation, secondaryAnimation) => Center(
+        child: Material(
+          type: MaterialType
+              .transparency, // Transparent material to avoid square background
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircleAvatar(
+                radius: 100,
+                backgroundColor: Colors.white,
+                backgroundImage:
+                    _profilePictureBase64 != null &&
+                        _profilePictureBase64!.isNotEmpty
+                    ? MemoryImage(base64Decode(_profilePictureBase64!))
+                    : null,
+                child:
+                    _profilePictureBase64 == null ||
+                        _profilePictureBase64!.isEmpty
+                    ? Text(
+                        _initialLetter,
+                        style: const TextStyle(
+                          fontSize: 48,
+                          color: Color(0xFF800000),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )
+                    : null,
+              ),
+              const SizedBox(height: 16),
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text(
+                  'Close',
+                  style: TextStyle(color: Color(0xFF800000), fontSize: 16),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        return FadeTransition(
+          opacity: animation,
+          child: ScaleTransition(
+            scale: Tween<double>(begin: 0.8, end: 1.0).animate(animation),
+            child: child,
+          ),
+        );
+      },
+    );
   }
 
   void _onItemTapped(int index) {
@@ -72,7 +139,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
           children: [
             const SizedBox(width: 12),
             Expanded(
-              // Prevent overflow by allowing text to shrink
               child: Text(
                 'IUEA Gym App',
                 style: const TextStyle(fontWeight: FontWeight.w600),
@@ -93,17 +159,49 @@ class _DashboardScreenState extends State<DashboardScreen> {
             },
             tooltip: 'Notifications',
           ),
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const ProfileSettings()),
+              ).then((_) {
+                _fetchUserData();
+              });
+            },
+            tooltip: 'Profile Settings',
+          ),
           Padding(
             padding: const EdgeInsets.only(right: 16),
-            child: CircleAvatar(
-              radius: 18,
-              backgroundColor: Colors.white,
-              child: Text(
-                _initialLetter, // Dynamically updated initial letter
-                style: const TextStyle(
-                  color: Color(0xFF800000),
-                  fontWeight: FontWeight.bold,
-                ),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const ProfileSettings()),
+                ).then((_) {
+                  _fetchUserData();
+                });
+              },
+              onLongPress: () => _showProfilePicturePreview(context),
+              child: CircleAvatar(
+                radius: 18,
+                backgroundColor: Colors.white,
+                backgroundImage:
+                    _profilePictureBase64 != null &&
+                        _profilePictureBase64!.isNotEmpty
+                    ? MemoryImage(base64Decode(_profilePictureBase64!))
+                    : null,
+                child:
+                    _profilePictureBase64 == null ||
+                        _profilePictureBase64!.isEmpty
+                    ? Text(
+                        _initialLetter,
+                        style: const TextStyle(
+                          color: Color(0xFF800000),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )
+                    : null,
               ),
             ),
           ),
@@ -172,12 +270,11 @@ class DashboardContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: ConstrainedBox(
-        // Ensure content fits within screen height
         constraints: BoxConstraints(
           minHeight:
               MediaQuery.of(context).size.height -
               AppBar().preferredSize.height -
-              kBottomNavigationBarHeight, // Adjust for AppBar and BottomNav
+              kBottomNavigationBarHeight,
         ),
         child: FutureBuilder<String>(
           future: _getUserName(),
@@ -188,11 +285,8 @@ class DashboardContent extends StatelessWidget {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Hero Banner
                 Container(
-                  height:
-                      MediaQuery.of(context).size.height *
-                      0.25, // Responsive height
+                  height: MediaQuery.of(context).size.height * 0.25,
                   margin: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
                     gradient: const LinearGradient(
@@ -248,8 +342,6 @@ class DashboardContent extends StatelessWidget {
                     ),
                   ),
                 ),
-
-                // Welcome Section with Dynamic Greeting
                 Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 20,
@@ -275,8 +367,6 @@ class DashboardContent extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-
-                // Quick Actions
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Wrap(
@@ -326,8 +416,6 @@ class DashboardContent extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-
-                // Membership Status Card
                 _buildCard(
                   context,
                   icon: Icons.card_membership,
@@ -340,8 +428,6 @@ class DashboardContent extends StatelessWidget {
                     MaterialPageRoute(builder: (_) => const MembershipScreen()),
                   ),
                 ),
-
-                // Upcoming Classes Card
                 _buildCard(
                   context,
                   icon: Icons.schedule,
@@ -355,8 +441,6 @@ class DashboardContent extends StatelessWidget {
                     ),
                   ),
                 ),
-
-                // Attendance Card
                 _buildCard(
                   context,
                   icon: Icons.check_circle,
@@ -368,8 +452,6 @@ class DashboardContent extends StatelessWidget {
                     MaterialPageRoute(builder: (_) => const AttendanceScreen()),
                   ),
                 ),
-
-                // Trainer Spotlight
                 _buildCard(
                   context,
                   iconWidget: const CircleAvatar(
@@ -394,8 +476,6 @@ class DashboardContent extends StatelessWidget {
                     );
                   },
                 ),
-
-                // Gym Info Footer
                 Padding(
                   padding: const EdgeInsets.all(20),
                   child: Semantics(

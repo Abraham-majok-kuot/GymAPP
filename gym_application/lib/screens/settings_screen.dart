@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'login_screen.dart';
+import 'profile_settings.dart';
 
-// Add a callback for theme mode change
 class SettingsScreen extends StatefulWidget {
   final bool darkModeEnabled;
   final ValueChanged<bool> onDarkModeChanged;
@@ -75,8 +75,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
             leading: const Icon(Icons.person),
             title: const Text('Profile'),
             onTap: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Profile Editing Coming Soon')),
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ProfileSettings(),
+                ),
               );
             },
           ),
@@ -84,12 +87,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
             leading: const Icon(Icons.logout),
             title: const Text('Logout'),
             onTap: () {
-              // Navigate to LoginScreen and replace the current route
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => const LoginScreen()),
               );
-              // Optional: Show a snackbar to confirm logout
               ScaffoldMessenger.of(
                 context,
               ).showSnackBar(const SnackBar(content: Text('Logged out')));

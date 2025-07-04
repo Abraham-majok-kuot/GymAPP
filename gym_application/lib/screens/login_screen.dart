@@ -61,6 +61,46 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  Future<void> _sendPasswordResetEmail() async {
+    final email = _emailController.text;
+    if (email.isEmpty) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Please enter your email')));
+      return;
+    }
+    try {
+      print('Sending reset email to: $email'); // Debug log
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Password reset email sent. Check your inbox.'),
+        ),
+      );
+    } on FirebaseAuthException catch (e) {
+      print('FirebaseAuthException: ${e.code}, ${e.message}'); // Debug log
+      String errorMessage;
+      switch (e.code) {
+        case 'invalid-email':
+          errorMessage = 'Invalid email address';
+          break;
+        case 'user-not-found':
+          errorMessage = 'No user found for this email';
+          break;
+        default:
+          errorMessage = e.message ?? 'Failed to send reset email';
+      }
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error: $errorMessage')));
+    } catch (e) {
+      print('General error: $e'); // Debug log
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error: ${e.toString()}')));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -142,6 +182,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     },
                     child: const Text(
                       'Don\'t have an account? Sign up',
+                      style: TextStyle(color: Color(0xFF800000)),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: _sendPasswordResetEmail,
+                    child: const Text(
+                      'Forgot Password?',
                       style: TextStyle(color: Color(0xFF800000)),
                     ),
                   ),
