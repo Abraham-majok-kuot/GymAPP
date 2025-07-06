@@ -11,6 +11,7 @@ class MembershipCard extends StatelessWidget {
     required this.membership,
     required this.onSelect,
     required this.isSelected,
+    Color? backgroundColor,
   });
 
   @override

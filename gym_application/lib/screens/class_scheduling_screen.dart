@@ -71,7 +71,8 @@ class _ClassSchedulingScreenState extends State<ClassSchedulingScreen> {
       builder: (context) => AlertDialog(
         title: Text('Book Class'),
         content: Text(
-            'Do you want to book a slot for ${classSchedule.className} with ${classSchedule.instructor} on ${_formatDateTime(classSchedule.dateTime)}?'),
+          'Do you want to book a slot for ${classSchedule.className} with ${classSchedule.instructor} on ${_formatDateTime(classSchedule.dateTime)}?',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
@@ -94,7 +95,8 @@ class _ClassSchedulingScreenState extends State<ClassSchedulingScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Class Scheduling'),
-        backgroundColor: Colors.red,
+        backgroundColor: const Color.fromARGB(255, 129, 21, 21),
+        foregroundColor: Colors.white,
       ),
       body: ListView.builder(
         padding: const EdgeInsets.all(16),
